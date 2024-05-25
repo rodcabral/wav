@@ -3,6 +3,7 @@
 #include <math.h>
 
 #define SAMPLE_RATE 44100
+#define BIT_DEPTH 16
 #define DURATION 2
 
 struct SineOscillator {
@@ -40,9 +41,12 @@ int main() {
 
     FILE* file = fopen("waveform", "wb");
 
+    float max_amplitude = pow(2, BIT_DEPTH - 1) - 1;
     for(int i = 0; i < SAMPLE_RATE * DURATION; ++i) {
-        float res = process(so);
-        fprintf(file, "%f", res);
+        float sample = process(so);
+        int int_sample = (int)(sample * max_amplitude);
+
+        fwrite(&int_sample, sizeof(int), 1, file);
     }
 
     fclose(file);
