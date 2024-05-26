@@ -79,9 +79,6 @@ int main(void) {
     fseek(file, 4, SEEK_SET);
     write(file, post_audio_pos - 8, 4);
 
-    printf("pre: %d\n", pre_audio_pos);
-    printf("pos: %d\n", post_audio_pos);
-
     destroy_sine_oscillator(so);
     fclose(file);
     return 0;
