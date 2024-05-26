@@ -39,7 +39,39 @@ float process(struct SineOscillator* so) {
 int main() {
     struct SineOscillator *so = init_sine_oscillator(440, 0.5);
 
-    FILE* file = fopen("waveform", "wb");
+    FILE* file = fopen("waveform.wav", "wb");
+
+    // Header chunk
+    fwrite("RIFF", 1, 4, file);
+    fwrite("----", 1, 4, file);
+    fwrite("WAVE", 1, 4, file);
+
+    // Format chunk
+    fwrite("fmt ", 1, 4, file);
+    int size = 16;
+    fwrite((char*)&size, 1, 4, file);
+    
+    int compression_code = 1;
+    fwrite((char*)&compression_code, 1, 2, file);
+
+    int channels = 2;
+    fwrite((char*)&channels, 1, 2, file);
+
+    int sample_rate = 4;
+    fwrite((char*)&sample_rate, 1, 4, file);
+
+    int bit_rate = sample_rate * BIT_DEPTH / 8;
+    fwrite((char*)&bit_rate, 1, 4, file);
+
+    int block_align = BIT_DEPTH / 8;
+    fwrite((char*)&block_align, 1, 2, file);
+
+    int bit_depth = BIT_DEPTH;
+    fwrite((char*)&bit_depth, 1, 2, file);
+
+    // Data chunk
+    fwrite("data", 1, 4, file);
+    fwrite("----", 1, 4, file);
 
     float max_amplitude = pow(2, BIT_DEPTH - 1) - 1;
     for(int i = 0; i < SAMPLE_RATE * DURATION; ++i) {
