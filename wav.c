@@ -46,7 +46,7 @@ int main() {
         float sample = process(so);
         int int_sample = (int)(sample * max_amplitude);
 
-        fwrite(&int_sample, sizeof(int), 1, file);
+        fwrite((char*)&int_sample, 1, 2, file);
     }
 
     fclose(file);
